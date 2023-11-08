@@ -1,0 +1,11 @@
+[server]
+port = 8090
+
+[starknet]
+rpc_url = "https://starknet-goerli.g.alchemy.com/v2/xxxxxx"
+private_key = "xxxxxxx"
+
+[notion]
+api_url = "https://api.notion.com/v1/pages/"
+database_id = "xxxxxx"
+secret = "xxxxxx"

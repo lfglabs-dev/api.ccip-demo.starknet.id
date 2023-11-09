@@ -1,0 +1,25 @@
+services:
+  ccip_server:
+    container_name: ccip_server
+    build:
+      context: .
+      args:
+        BUILD_MODE: debug
+    restart: always
+    ports:
+      - 8090:8090
+
+  nginx:
+    image: valian/docker-nginx-auto-ssl
+    restart: on-failure
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ssl_data:/etc/resty-auto-ssl
+    environment:
+      ALLOWED_DOMAINS: "ccip-demo.starknet.id"
+      SITES: "ccip-demo.starknet.id=ccip_server:8090"
+
+volumes:
+  ssl_data:

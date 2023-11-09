@@ -18,8 +18,8 @@ services:
     volumes:
       - ssl_data:/etc/resty-auto-ssl
     environment:
-      ALLOWED_DOMAINS: "ccip-demo.starknet.id"
-      SITES: "ccip-demo.starknet.id=ccip_server:8090"
+      ALLOWED_DOMAINS: "api.ccip-demo.starknet.id"
+      SITES: "api.ccip-demo.starknet.id=ccip_server:8090"
 
 volumes:
   ssl_data:

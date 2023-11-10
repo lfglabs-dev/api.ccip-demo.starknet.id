@@ -41,6 +41,6 @@ async fn main() {
 async fn root() -> (StatusCode, String) {
     (
         StatusCode::ACCEPTED,
-        format!("quest_server v{}", env!("CARGO_PKG_VERSION")),
+        format!("ccip_server v{}", env!("CARGO_PKG_VERSION")),
     )
 }

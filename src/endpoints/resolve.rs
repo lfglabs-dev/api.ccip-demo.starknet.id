@@ -7,6 +7,7 @@ use axum::{
     http::{HeaderMap, StatusCode},
     response::{IntoResponse, Json},
 };
+use chrono::{Duration, Utc};
 use reqwest::header::{HeaderValue, AUTHORIZATION, CONTENT_TYPE};
 use serde_json::json;
 use starknet::core::{
@@ -18,6 +19,7 @@ use std::sync::Arc;
 
 lazy_static::lazy_static! {
     static ref FIELD_STARKNET: FieldElement = FieldElement::from_dec_str("8319381555716711796").unwrap();
+    static ref HASH_NAME: FieldElement = FieldElement::from_dec_str("2216433769979142660313091089524420126762954343").unwrap();
 }
 
 pub async fn handler(
@@ -64,8 +66,22 @@ pub async fn handler(
                         let encoded_domain = encode(domain_splitted[0]).unwrap();
                         let hashed_domain = hash_domain(vec![encoded_domain]);
 
+                        let max_validity = Utc::now() + Duration::hours(1);
+                        let max_validity_seconds = max_validity.timestamp_millis() / 1000;
                         let hash = pedersen_hash(
-                            &pedersen_hash(&hashed_domain, &FIELD_STARKNET),
+                            &pedersen_hash(
+                                &pedersen_hash(
+                                    &pedersen_hash(
+                                        &HASH_NAME,
+                                        &FieldElement::from_dec_str(
+                                            max_validity_seconds.to_string().as_str(),
+                                        )
+                                        .unwrap(),
+                                    ),
+                                    &hashed_domain,
+                                ),
+                                &FIELD_STARKNET,
+                            ),
                             &FieldElement::from_hex_be(address).unwrap(),
                         );
 
@@ -73,7 +89,7 @@ pub async fn handler(
                             Ok(signature) => (
                                 StatusCode::OK,
                                 Json(
-                                    json!({"address": address, "r": signature.r, "s": signature.s}),
+                                    json!({"address": address, "r": signature.r, "s": signature.s, "max_validity": max_validity_seconds}),
                                 ),
                             )
                                 .into_response(),

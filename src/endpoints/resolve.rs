@@ -67,7 +67,7 @@ pub async fn handler(
                         let hashed_domain = hash_domain(vec![encoded_domain]);
 
                         let max_validity = Utc::now() + Duration::hours(1);
-                        let max_validity_seconds = max_validity.timestamp_millis() / 1000;
+                        let max_validity_seconds = max_validity.timestamp();
                         let hash = pedersen_hash(
                             &pedersen_hash(
                                 &pedersen_hash(

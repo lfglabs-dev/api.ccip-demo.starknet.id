@@ -1,5 +1,8 @@
 use serde::Deserialize;
-use starknet::providers::{jsonrpc::HttpTransport, JsonRpcClient};
+use starknet::{
+    core::types::FieldElement,
+    providers::{jsonrpc::HttpTransport, JsonRpcClient},
+};
 
 use crate::config::Config;
 
@@ -21,13 +24,13 @@ pub_struct!(Debug, Deserialize; ResultItem {
 });
 
 pub_struct!(Debug, Deserialize; Properties {
-    Address: Address,
-});
-
-pub_struct!(Debug, Deserialize; Address {
-    rich_text: Vec<RichText>,
+    Address: RichText,
 });
 
 pub_struct!(Debug, Deserialize; RichText {
+    rich_text: Vec<PlainText>,
+});
+
+pub_struct!(Debug, Deserialize; PlainText {
     plain_text: String,
 });

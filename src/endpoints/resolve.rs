@@ -43,7 +43,7 @@ pub async fn handler(
         "filter": {
             "property": "Domain",
             "title": {
-                "equals": query.domain
+                "equals": format!("{}.notion.stark", query.domain)
             }
         }
     });
@@ -57,14 +57,15 @@ pub async fn handler(
     {
         Ok(response) => match response.json::<ApiResponse>().await {
             Ok(res) => {
-                if let Some(first_result) = res.results.get(0) {
-                    if let Some(first_rich_text) = first_result.properties.Address.rich_text.get(0)
+                if let Some(first_result) = res.results.first() {
+                    if let Some(first_rich_text) = first_result.properties.Address.rich_text.first()
                     {
                         let address = &first_rich_text.plain_text;
 
                         let domain_splitted: Vec<&str> = query.domain.split('.').collect();
-                        let encoded_domain = encode(domain_splitted[0]).unwrap();
-                        let hashed_domain = hash_domain(vec![encoded_domain]);
+                        let encoded_domain: Vec<FieldElement> = domain_splitted.iter()
+                            .map(|part| encode(part).unwrap()).collect();
+                        let hashed_domain = hash_domain(encoded_domain);
 
                         let max_validity = Utc::now() + Duration::hours(1);
                         let max_validity_seconds = max_validity.timestamp();

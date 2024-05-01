@@ -63,8 +63,10 @@ pub async fn handler(
                         let address = &first_rich_text.plain_text;
 
                         let domain_splitted: Vec<&str> = query.domain.split('.').collect();
-                        let encoded_domain: Vec<FieldElement> = domain_splitted.iter()
-                            .map(|part| encode(part).unwrap()).collect();
+                        let encoded_domain: Vec<FieldElement> = domain_splitted
+                            .iter()
+                            .map(|part| encode(part).unwrap())
+                            .collect();
                         let hashed_domain = hash_domain(encoded_domain);
 
                         let max_validity = Utc::now() + Duration::hours(1);

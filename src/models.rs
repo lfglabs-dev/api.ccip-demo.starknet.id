@@ -1,8 +1,5 @@
 use serde::Deserialize;
-use starknet::{
-    core::types::FieldElement,
-    providers::{jsonrpc::HttpTransport, JsonRpcClient},
-};
+use starknet::providers::{jsonrpc::HttpTransport, JsonRpcClient};
 
 use crate::config::Config;
 

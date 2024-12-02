@@ -3,8 +3,6 @@ services:
     container_name: ccip_server
     build:
       context: .
-      args:
-        BUILD_MODE: debug
     restart: always
     ports:
       - 8090:8090
